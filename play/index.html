@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elaria · Tarayıcıda oyna</title>
+<meta name="description" content="Elaria'yı indirmeden, tarayıcında oyna.">
+<link rel="icon" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Pixelify+Sans:wght@500;700&family=Silkscreen&display=swap">
+<style>
+  /* Sitenin "Gece Masalı" renkleri ve yazıları (ElariaSite/css/site.css) */
+  :root {
+    --night: #070b18; --deep: #0c1330; --line: #2a3766; --moon: #e9ecff; --mist: #9aa3c7; --gold: #f2c14e; --ink: #241404; --ember: #ff7a3a;
+    --display: "Pixelify Sans", "Courier New", monospace; --body: "IBM Plex Mono", ui-monospace, Consolas, monospace; --label: "Silkscreen", monospace;
+    color-scheme: dark;
+  }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: var(--night); color: var(--moon); font: 400 15px/1.6 var(--body); }
+  /* raylib tuvali sayfanın boyutuna getirir (Game.Start: SetWindowMinSize). cursor: none: oyun kendi imlecini çizer
+     (Core/Cursor.cs); raylib'in HideCursor'ı tarayıcıda fareyi dondurur. */
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; outline: none; image-rendering: pixelated; cursor: none; }
+  #veil { position: fixed; inset: 0; display: grid; place-items: center; padding: 24px 16px; overflow: auto;
+    background: radial-gradient(ellipse at 50% 30%, #13204a 0%, var(--night) 65%); }
+  .playing #veil { display: none; }
+  .card { width: min(440px, 100%); display: grid; gap: 18px; text-align: center; }
+  .back { position: fixed; top: 16px; left: 16px; color: var(--mist); text-decoration: none; font-family: var(--label); font-size: 12px; letter-spacing: .1em; }
+  .back:hover, .back:focus-visible { color: var(--gold); }
+  .kicker { margin: 0; font-family: var(--label); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); }
+  h1 { margin: -6px 0 0; font: 700 clamp(44px, 12vw, 72px)/1 var(--display); letter-spacing: .08em; color: var(--gold);
+    text-shadow: 0 4px 0 var(--ink), 0 0 32px rgba(242, 193, 78, .25); }
+  #track { height: 10px; padding: 2px; border: 2px solid var(--line); background: var(--deep); }
+  #bar { width: 0; height: 100%; background: var(--gold); transition: width .2s; }
+  #status { margin: 0; min-height: 1.6em; color: var(--mist); font-size: 13px; }
+  #start { display: none; justify-self: center; padding: 14px 40px; border: 0; background: var(--gold); color: var(--ink); cursor: pointer;
+    font: 700 22px var(--display); letter-spacing: .06em; box-shadow: 0 4px 0 #8a5a14; }
+  #start:hover { transform: translateY(-1px); }
+  #start:active { transform: translateY(3px); box-shadow: 0 1px 0 #8a5a14; }
+  #start:focus-visible { outline: 2px solid var(--moon); outline-offset: 4px; }
+  .ready #start { display: block; }
+  .ready #track { display: none; }
+  .keys { margin: 0; padding: 14px 16px; list-style: none; border: 1px solid var(--line); background: rgba(12, 19, 48, .7); text-align: left; font-size: 13px; }
+  .keys li { display: flex; justify-content: space-between; gap: 12px; }
+  .keys b { font-weight: 500; color: var(--moon); }
+  .keys span { color: var(--mist); text-align: right; }
+  .note { margin: 0; color: var(--mist); font-size: 12.5px; }
+  /* Telefon, tablet, TV (main.js: no-play): uyarı çıkar, indirme ve Oyna yok */
+  #touch { display: none; color: var(--ember); font-size: 14px; }
+  .no-play #touch { display: block; }
+  .no-play #track, .no-play #status, .no-play .note:not(#touch) { display: none; }
+  .after { display: none; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .ended .after, .failed .after { display: flex; }
+  .ended #track, .failed #track { display: none; }
+  .after a, .after button { padding: 10px 18px; border: 2px solid var(--gold); background: none; color: var(--gold); cursor: pointer; text-decoration: none; font: 500 16px var(--display); }
+  .after a:hover, .after button:hover { background: var(--gold); color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { #bar { transition: none; } }
+</style>
+</head>
+<body>
+<canvas id="canvas" tabindex="0"></canvas>
+<div id="veil">
+  <a class="back" href="../" data-t="back">← Siteye dön</a>
+  <div class="card">
+    <p class="kicker" data-t="kicker">Tarayıcı sürümü</p>
+    <h1>ELARIA</h1>
+    <div id="track" role="progressbar" aria-label="Yükleniyor" aria-valuemin="0" aria-valuemax="100"><div id="bar"></div></div>
+    <p id="status" role="status" aria-live="polite"></p>
+    <button id="start" type="button" data-t="play">Oyna</button>
+    <div class="after">
+      <button type="button" onclick="location.reload()" data-t="again">Yeniden başlat</button>
+      <a href="../" data-t="site">Siteye dön</a>
+    </div>
+    <ul class="keys">
+      <li><b data-t="k.move.k">WASD / oklar</b><span data-t="k.move">yürü · Shift: koş</span></li>
+      <li><b data-t="k.act.k">Sol / sağ tık</b><span data-t="k.act">vur · konuş, aç, topla</span></li>
+      <li><b>E</b><span data-t="k.inv">envanter</span></li>
+      <li><b>Esc</b><span data-t="k.menu">menü, kayıt, ayarlar</span></li>
+    </ul>
+    <p class="note" data-t="saves">Kayıtların bu tarayıcıda saklanır. İlk açılışta yaklaşık 20 MB indirilir.</p>
+    <p class="note" id="touch" data-t="touch">Elaria bilgisayar için yapıldı: telefonda, tablette ya da televizyonda oynanamaz. Bu sayfayı klavyesi ve faresi olan bir bilgisayarda aç.</p>
+  </div>
+</div>
+<script type="module" src="main.js"></script>
+</body>
+</html>

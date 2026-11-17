@@ -1,0 +1,270 @@
+:root {
+  /* Gece Masalı: bilerek tek tema. Ay ışıklı göl laciverti, ay beyazı, göstergedeki altın; kor turuncusu yalnız ateş ve tehlike.
+     Düzen: arkada sabit, canlı gece sahnesi; bölümler üstünden kayan buzlu cam levhalar. İmza: bloklarla kurulan içerik
+     (js/chunks.js) ve köşelerdeki kara sis (js/fog.js). */
+  --night: #070b18;
+  --deep: #0c1330;
+  --line: #2a3766;
+  --moon: #e9ecff;
+  --mist: #9aa3c7;
+  --gold: #f2c14e;
+  --gold-dark: #8a5a14;
+  --ink: #241404;
+  --ember: #ff7a3a;
+  --glass: rgba(12, 19, 48, .6);   /* cam levha: brightness(.45) ile en parlak arka planda da metin ≥ 4,5:1 */
+  --display: "Pixelify Sans", "Courier New", monospace;
+  --body: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --label: "Silkscreen", "Pixelify Sans", monospace;
+  --wrap: 1120px;
+  --gutter: clamp(16px, 4vw, 40px);
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--night);
+  color: var(--moon);
+  font: 400 16px/1.65 var(--body);
+  overflow-x: clip;
+}
+img { max-width: 100%; height: auto; display: block; image-rendering: pixelated; }
+figure { margin: 0; }
+h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.1; margin: 0; text-wrap: balance; }
+h2 { font-size: clamp(30px, 5vw, 52px); letter-spacing: .01em; }
+h3 { font-size: 22px; font-weight: 500; }
+p { margin: 0; }
+a { color: var(--gold); }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gutter); }
+.section { padding: clamp(32px, 6vw, 72px) 0; position: relative; }
+/* Cam levha: her bölümün içeriği sabit sahnenin üstünde tek bir buzlu camda (bölüm başına tek bulanıklık) */
+.section > .wrap {
+  width: min(var(--wrap), 100% - 2 * var(--gutter));
+  padding: clamp(28px, 5vw, 56px) clamp(18px, 4vw, 48px);
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(14px) brightness(.45) saturate(1.2);
+  backdrop-filter: blur(14px) brightness(.45) saturate(1.2);
+  border: 1px solid rgba(233, 236, 255, .12);
+  border-top-color: rgba(233, 236, 255, .28);    /* oyundaki sis bloklarının üst/sol ışık kenarı gibi */
+  border-left-color: rgba(233, 236, 255, .28);
+  box-shadow: 0 0 0 2px #03050c;
+}
+.kicker { font-family: var(--label); font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+.lead { color: var(--mist); max-width: 60ch; margin-top: 18px; font-size: 17px; }
+.note { color: var(--mist); font-size: 13px; }
+
+.skip { position: absolute; left: -999px; top: 8px; z-index: 50; background: var(--gold); color: var(--ink); padding: 8px 12px; font-family: var(--display); }
+.skip:focus { left: 8px; }
+
+/* ---- Üst çubuk ---- */
+.bar {
+  position: fixed; inset: 0 0 auto 0; z-index: 20; height: 56px;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 var(--gutter);
+  transition: background .3s, box-shadow .3s;
+}
+.bar.is-solid { background: rgba(7, 11, 24, .55); box-shadow: 0 2px 0 #000, 0 3px 0 var(--line); -webkit-backdrop-filter: blur(10px) brightness(.6); backdrop-filter: blur(10px) brightness(.6); }
+.bar-mark { display: flex; align-items: center; gap: 8px; color: var(--moon); text-decoration: none; font-family: var(--display); font-size: 18px; letter-spacing: .12em; }
+.bar-right { display: flex; align-items: center; gap: 12px; }
+.lang { display: flex; box-shadow: 0 0 0 2px #000; }
+.lang button {
+  font: 400 12px var(--label); letter-spacing: .08em; color: var(--mist); background: rgba(12, 19, 48, .8);
+  border: 0; padding: 7px 10px; cursor: pointer;
+}
+.lang button[aria-pressed="true"] { background: var(--moon); color: var(--night); }
+
+/* ---- Düğmeler: oyundaki gibi kabarık piksel kenar ---- */
+.btn {
+  display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  font: 700 20px/1 var(--display); text-decoration: none; color: var(--ink); background: var(--gold);
+  padding: 13px 26px 11px; border: 0; cursor: pointer;
+  box-shadow: inset -4px -4px 0 rgba(0, 0, 0, .22), inset 4px 4px 0 rgba(255, 255, 255, .35), 0 0 0 3px var(--ink), 0 7px 0 3px var(--ink);
+  transition: transform .1s steps(2), box-shadow .1s steps(2);
+}
+.btn small { font: 400 10px var(--label); letter-spacing: .08em; opacity: .75; }
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(4px); box-shadow: inset -4px -4px 0 rgba(0, 0, 0, .22), inset 4px 4px 0 rgba(255, 255, 255, .35), 0 0 0 3px var(--ink), 0 3px 0 3px var(--ink); }
+.btn-small { font-size: 15px; padding: 8px 14px 7px; box-shadow: inset -3px -3px 0 rgba(0, 0, 0, .22), inset 3px 3px 0 rgba(255, 255, 255, .35), 0 0 0 2px var(--ink), 0 4px 0 2px var(--ink); }
+.btn-big { font-size: 26px; padding: 18px 34px 15px; margin-top: 22px; }
+.btn-ghost { color: var(--moon); background: rgba(12, 19, 48, .72); box-shadow: inset 0 0 0 2px var(--line), 0 0 0 3px #03050c; }
+
+/* ---- 1. Açılış ---- */
+.hero {
+  position: relative; isolation: isolate; overflow: hidden;
+  min-height: clamp(580px, 96svh, 960px);
+  display: grid; align-content: start; justify-items: center;
+}
+/* Sabit sahne (js/hero.js): bütün sayfanın arkasında */
+#scene { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; image-rendering: pixelated; }
+/* Bloklarla kurulum (js/chunks.js): düşen karolar bu tuvalde; öğeler o başlayana kadar gizli */
+#chunks { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
+.chunking .chunk { clip-path: inset(50%); }
+/* Köşe sisi (js/fog.js): içeriğin ve düşen karoların üstünde, üst çubuğun (20) altında */
+#corner-fog { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 15; pointer-events: none; image-rendering: pixelated; }
+.hero-shade {
+  position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse 60% 45% at 50% 30%, rgba(7, 11, 24, .45), transparent 70%);
+}
+.hero-content { text-align: center; padding: clamp(110px, 17vh, 170px) var(--gutter) 0; max-width: 820px; }
+.logo {
+  font-size: clamp(64px, 15vw, 172px); letter-spacing: .06em; color: var(--gold); margin: 4px 0 18px;
+  text-shadow: 0 .05em 0 var(--gold-dark), .035em 0 0 var(--ink), -.035em 0 0 var(--ink), 0 -.035em 0 var(--ink),
+               0 .085em 0 var(--ink), .035em .05em 0 var(--ink), -.035em .05em 0 var(--ink), 0 .2em .35em rgba(0, 0, 0, .55);
+}
+.hero-lead { font-size: clamp(15px, 1.7vw, 18px); color: var(--moon); max-width: 56ch; margin: 0 auto; text-shadow: 0 2px 0 #000; }
+.cta-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 22px; margin-top: 34px; }
+@media (min-width: 900px) and (min-aspect-ratio: 6/5) {   /* geniş ekran: yazılar solda, kale sağda */
+  .hero { justify-items: start; }
+  .hero-content { text-align: left; max-width: 640px; margin-left: max(var(--gutter), calc((100vw - var(--wrap)) / 2 + var(--gutter))); padding-left: 0; padding-right: 0; }
+  .hero-lead { margin: 0; }
+  .cta-row { justify-content: flex-start; }
+  .logo { font-size: clamp(64px, 10.5vw, 150px); }
+}
+.scroll-cue {
+  position: absolute; bottom: 26px; left: 50%; translate: -50% 0;
+  font: 400 11px var(--label); letter-spacing: .14em; text-transform: uppercase; color: var(--mist); text-decoration: none;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.scroll-cue::after { content: ""; width: 10px; height: 10px; border: solid var(--mist); border-width: 0 3px 3px 0; rotate: 45deg; animation: bob 1.4s steps(4) infinite; }
+@keyframes bob { 50% { translate: 0 6px; } }
+
+/* ---- Paneller: oyunun yarı saydam, 8 px blok ızgaralı arayüzü ---- */
+.panel, .card, .stage {
+  position: relative;
+  background:
+    linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px) 0 0 / 8px 8px,
+    linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px) 0 0 / 8px 8px,
+    rgba(20, 24, 40, .55);
+  border: 2px solid #3a4262;
+  box-shadow: 0 0 0 2px #03050c;
+}
+
+/* ---- 2. Önsöz ---- */
+.story-list { list-style: none; padding: 0; margin: 48px 0 0; display: grid; gap: clamp(40px, 7vw, 84px); }
+.story-row { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: clamp(20px, 4vw, 48px); align-items: center; }
+.story-row:nth-child(even) .frame { order: 2; }
+.frame { position: relative; border: 3px solid #000; box-shadow: 0 0 0 2px var(--line), 0 18px 40px rgba(0, 0, 0, .5); }
+.frame::after {   /* eski TV: tarama çizgileri */
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, .18) 0 1px, transparent 1px 3px);
+}
+.frame img { width: 100%; }
+.line { font-size: clamp(17px, 2vw, 21px); line-height: 1.6; max-width: 34ch; }
+.line.typing::after { content: "▌"; color: var(--gold); animation: blink .7s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.story-end { margin-top: clamp(48px, 8vw, 96px); text-align: center; font: 700 clamp(26px, 4vw, 40px) var(--display); color: var(--gold); }
+
+/* ---- 3. Kara sis yolu ---- */
+.path { list-style: none; padding: 0; margin: 56px 0 0; position: relative; display: grid; grid-template-columns: 1fr 1fr; column-gap: 72px; row-gap: 40px; align-items: start; }
+.path::before {   /* toprak yol: M haritasındaki gibi kesik kesik */
+  content: ""; position: absolute; left: 50%; top: 0; bottom: 0; width: 6px; translate: -50% 0;
+  background: repeating-linear-gradient(to bottom, #6b5432 0 12px, transparent 12px 24px);
+  opacity: .7;
+}
+.stage { --n: 1; }
+.stage-img { overflow: hidden; }
+.stage:nth-child(even) { margin-top: 140px; }
+.stage:nth-child(1) { --n: 1; } .stage:nth-child(2) { --n: 2; } .stage:nth-child(3) { --n: 3; } .stage:nth-child(4) { --n: 4; }
+.stage:nth-child(5) { --n: 5; } .stage:nth-child(6) { --n: 6; } .stage:nth-child(7) { --n: 7; } .stage:nth-child(8) { --n: 8; }
+.stage::before {   /* yoldaki durak */
+  content: ""; position: absolute; top: 28px; width: 14px; height: 14px; background: var(--gold); box-shadow: 0 0 0 3px var(--ink);
+}
+.stage:nth-child(odd)::before { right: -45px; }   /* 72 px aralığın ortası, yolun üstü */
+.stage:nth-child(even)::before { left: -45px; }
+.stage-img img { width: 100%; aspect-ratio: 2 / 1; object-fit: cover; border-bottom: 2px solid #000; }
+.stage-body { padding: 18px 20px 22px; }
+.danger { font: 400 12px var(--label); letter-spacing: .12em; text-transform: uppercase; color: hsl(calc(110 - var(--n) * 14) 75% 62%); }
+.stage h3 { font-size: 26px; margin: 4px 0 12px; }
+.stage dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; font-size: 14px; }
+.stage dt { color: var(--mist); font-family: var(--label); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; padding-top: 3px; }
+.stage dd { margin: 0; }
+.fog { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; image-rendering: pixelated; }
+
+/* ---- 4. Neler var ---- */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 26px; margin-top: 48px; }
+.card { padding: 0 0 22px; display: flex; flex-direction: column; }
+.card figure { aspect-ratio: 16 / 9; overflow: hidden; border-bottom: 2px solid #000; background: #0a0f22; }
+.card figure img { width: 100%; height: 100%; object-fit: cover; transition: scale .4s steps(4); }
+.card:hover figure img { scale: 1.06; }
+/* Sınıflar: 15 karakterlik şerit büyük çizilir, kartın içinde yavaşça bir uçtan öbürüne geçit yapar */
+.card figure.sprites { display: flex; align-items: center; background: radial-gradient(circle at 50% 70%, #1c2652, #0a0f22 70%); }
+.card figure.sprites img { width: auto; height: 62%; max-width: none; object-fit: fill; animation: parade 22s steps(90) infinite alternate; }
+.card:hover figure.sprites img { scale: 1; }
+@keyframes parade { from { translate: 12px 0; } to { translate: calc(-100% + 300px) 0; } }
+.card h3 { margin: 18px 20px 8px; }
+.card p { margin: 0 20px; color: var(--mist); font-size: 14.5px; }
+
+/* ---- 5. Rakamlar ---- */
+.stats { list-style: none; padding: 0; margin: 40px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2px; background: #000; border: 2px solid #000; }
+.stats li { background: rgba(12, 19, 48, .6); padding: 26px 18px; display: flex; flex-direction: column; gap: 4px; }
+.stats b { font: 700 clamp(38px, 5vw, 56px)/1 var(--display); color: var(--gold); font-variant-numeric: tabular-nums; }
+.stats span { color: var(--mist); font-size: 14px; }
+
+/* ---- 6. Arkadaşınla ---- */
+.coop-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(24px, 5vw, 64px); align-items: center; }
+.coop-grid p { margin-top: 16px; max-width: 52ch; }
+
+/* ---- 7. Oyna / İndir ---- */
+.play-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 24px; margin-top: 44px; }
+.panel { padding: 26px; }
+.panel h3 { font-size: 24px; }
+.panel-main { grid-row: span 2; display: flex; flex-direction: column; align-items: flex-start; }
+.specs { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 6px; color: var(--mist); }
+.specs li::before { content: "▪ "; color: var(--gold); }
+.steps { margin: 14px 0 12px; padding-left: 22px; display: grid; gap: 8px; font-size: 14.5px; }
+.steps li::marker { font-family: var(--label); color: var(--gold); }
+.panel .dl { margin-top: 18px; }
+.toast { margin-top: 18px; padding: 10px 14px; background: rgba(255, 122, 58, .14); border: 2px solid var(--ember); font-size: 14px; }
+
+/* ---- Telefon, tablet, TV: üstte cam şerit, "Tarayıcıda oyna" kapalı (index.html <head>, js/blocks.js) ---- */
+.device-note {
+  display: none; position: fixed; top: 64px; left: 50%; translate: -50% 0; z-index: 25;
+  width: min(560px, calc(100% - 2 * var(--gutter))); padding: 12px 14px; gap: 12px; align-items: center;
+  background: rgba(7, 11, 24, .72); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border: 1px solid rgba(233, 236, 255, .14); border-top-color: rgba(233, 236, 255, .3); box-shadow: 0 0 0 2px #03050c;
+  font-size: 14px;
+}
+.device-note p { flex: 1; }
+.device-note button { font: 500 15px var(--display); color: var(--ink); background: var(--gold); border: 0; padding: 7px 14px; cursor: pointer; }
+.no-play .device-note { display: flex; }
+.no-play.device-ok .device-note { display: none; }
+.no-play a[href="play/"] { opacity: .45; filter: grayscale(.7); pointer-events: none; }
+
+.foot {
+  padding: 40px var(--gutter) 56px; text-align: center; color: var(--mist); border-top: 2px solid var(--line); display: grid; gap: 6px;
+  background: rgba(7, 11, 24, .6); -webkit-backdrop-filter: blur(10px) brightness(.6); backdrop-filter: blur(10px) brightness(.6);
+}
+
+/* ---- Dar ekran ---- */
+@media (max-width: 860px) {
+  .story-row, .coop-grid, .play-grid { grid-template-columns: 1fr; }
+  .story-row:nth-child(even) .frame { order: 0; }
+  .path { grid-template-columns: 1fr; padding-left: 26px; row-gap: 28px; }
+  .path::before { left: 4px; translate: 0 0; }
+  .stage:nth-child(even) { margin-top: 0; }
+  .stage:nth-child(n)::before { left: -30px; right: auto; }
+  .panel-main { grid-row: auto; }
+}
+@media (max-width: 480px) {
+  .bar-mark span { display: none; }
+  .btn-big { font-size: 22px; padding: 15px 24px 13px; }
+  .stage dl { grid-template-columns: 1fr; gap: 2px; }
+  .stage dt { padding-top: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* Cam desteklenmiyorsa levhalar opak */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .section > .wrap { background: rgba(12, 19, 48, .92); }
+  .bar.is-solid, .foot { background: rgba(7, 11, 24, .94); }
+}
+@media print {
+  #scene, #chunks, #corner-fog { display: none; }
+  .chunk { clip-path: none !important; }
+}

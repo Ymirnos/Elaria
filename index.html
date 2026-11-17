@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="meta.title">Elaria</title>
+<meta name="description" data-i18n-content="meta.desc" content="Elaria: kara sisin altında bekleyen bir piksel dünyası. Gerçek zamanlı dövüş, 43 boss, 1.224 eşya. Ymir's Studio.">
+<meta name="theme-color" content="#070b18">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Pixelify+Sans:wght@500;700&family=Silkscreen&display=swap">
+<link rel="stylesheet" href="css/site.css">
+<script>
+  // Parça kurulumu (js/chunks.js) öğeleri bloklarla kurar; o başlayana kadar gizli dursunlar. Emniyet: 3 sn içinde
+  // başlamazsa (hata) sınıf kalkar, içerik hiçbir koşulda gizli kalmaz. Hareket azaltmada hiç gizlenmez.
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    document.documentElement.classList.add("chunking");
+    setTimeout(() => document.documentElement.classList.remove("chunking"), 3000);
+  }
+  // Telefon, tablet, televizyon: oyun bilgisayar için; şerit çıkar, "Tarayıcıda oyna" kapanır (js/blocks.js).
+  // Aynı denetim oyun sayfasında: ElariaWeb/wwwroot/main.js.
+  if (matchMedia("(hover: none) and (pointer: coarse)").matches
+      || /SmartTV|SMART-TV|Tizen|Web0S|webOS|HbbTV|NetCast|BRAVIA|AFT[A-Z]|CrKey|Android TV|GoogleTV|AppleTV|Roku|PlayStation|Xbox/i.test(navigator.userAgent)) {
+    document.documentElement.classList.add("no-play");
+    try { if (sessionStorage.getItem("elaria.deviceOk")) document.documentElement.classList.add("device-ok"); } catch { /* gizli pencere */ }
+  }
+</script>
+</head>
+<body>
+<canvas id="scene" aria-hidden="true"></canvas>
+
+<a class="skip" href="#play" data-i18n="nav.skip">İndirme bölümüne geç</a>
+
+<header class="bar">
+  <a class="bar-mark" href="#top" aria-label="Elaria"><img src="img/favicon.png" alt="" width="20" height="20"> <span>ELARIA</span></a>
+  <div class="bar-right">
+    <div class="lang" role="group" aria-label="Dil / Language">
+      <button type="button" data-lang="tr" aria-pressed="true">TR</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+    <a class="btn btn-small" href="#play" data-i18n="nav.download">İndir</a>
+  </div>
+</header>
+
+<div class="device-note" role="note">
+  <p data-i18n="device.note">Elaria bilgisayar için yapıldı: telefonda, tablette ya da televizyonda oynanamaz. Tanıtıma yine de göz atabilirsin.</p>
+  <button type="button" class="device-ok" data-i18n="device.ok">Tamam</button>
+</div>
+
+<main id="top">
+
+  <!-- 1. Açılış: arkadaki sabit sahnenin (#scene, js/hero.js) önünde -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-shade" aria-hidden="true"></div>
+    <div class="hero-content">
+      <p class="kicker chunk" data-i18n="hero.tag">Bir Ymir's Studio oyunu</p>
+      <h1 id="hero-title" class="logo chunk" aria-label="Elaria">ELARIA</h1>
+      <p class="hero-lead chunk" data-i18n="hero.lead">Kara sisin altında bekleyen bir piksel dünyası. Gerçek zamanlı dövüş, 43 boss, binlerce eşya ve sonuna kadar senin olan bir yolculuk.</p>
+      <div class="cta-row chunk">
+        <a class="btn btn-gold" href="play/">
+          <span data-i18n="hero.play">Tarayıcıda oyna</span>
+          <small data-i18n="hero.play.note">Kurulum yok · ~20 MB</small>
+        </a>
+        <a class="btn btn-ghost js-download" href="#play">
+          <span data-i18n="hero.download">İndir</span>
+          <small>Windows · 95 MB</small>
+        </a>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#story" data-i18n="hero.scroll">Kaydır</a>
+  </section>
+
+  <!-- 2. Önsöz: açılış sinemasından kareler -->
+  <section id="story" class="section story" aria-labelledby="story-title">
+    <div class="wrap">
+      <p class="kicker chunk" data-i18n="story.kicker">Önsöz</p>
+      <h2 id="story-title" class="chunk" data-i18n="story.title">Bir kutu, bir ekran, bir dünya</h2>
+      <ol class="story-list">
+        <li class="story-row">
+          <figure class="frame chunk"><img src="img/story_basement.webp" width="640" height="288" loading="lazy" alt="Merdivenli, tozlu bir bodrumda kutunun başındaki çocuk" data-i18n-alt="story.alt1"></figure>
+          <p class="line type" data-i18n="story.l1">Yıllardır kimsenin inmediği bodrumda tozlu bir kutu vardı. Kutunun dibinde bir oyun duruyordu.</p>
+        </li>
+        <li class="story-row">
+          <figure class="frame chunk"><img src="img/story_box.webp" width="640" height="288" loading="lazy" alt="Kapağında ay ve kale olan Elaria oyun kutusu" data-i18n-alt="story.alt2"></figure>
+          <p class="line type" data-i18n="story.l2">Ne yapımcısı yazıyordu ne de yılı. Yalnızca tek bir kelime: Elaria.</p>
+        </li>
+        <li class="story-row">
+          <figure class="frame chunk"><img src="img/story_tv.webp" width="640" height="288" loading="lazy" alt="Gece odasında, eski televizyonun ekranında Elaria yazısı" data-i18n-alt="story.alt3"></figure>
+          <p class="line type" data-i18n="story.l3">O gece oyunu eski konsoluna taktı. Daha düğmeye basmadan ekran aydınlandı.</p>
+        </li>
+        <li class="story-row">
+          <figure class="frame chunk"><img src="img/story_vortex.webp" width="640" height="288" loading="lazy" alt="Oda bloklara ayrılıp ekranın içine çekiliyor" data-i18n-alt="story.alt4"></figure>
+          <p class="line type" data-i18n="story.l4">Ve Elaria onu içine çekti.</p>
+        </li>
+      </ol>
+      <p class="story-end chunk" data-i18n="story.end">Hikâye burada başlıyor.</p>
+    </div>
+  </section>
+
+  <!-- 3. Kara sis: sekiz aşama (js/blocks.js sisi kaldırır) -->
+  <section id="map" class="section map" aria-labelledby="map-title">
+    <div class="wrap">
+      <p class="kicker chunk" data-i18n="map.kicker">Kara Sis</p>
+      <h2 id="map-title" class="chunk" data-i18n="map.title">Sekiz diyar, sekiz kapı</h2>
+      <p class="lead chunk" data-i18n="map.lead">Başta yalnız Kuzey Ovaları açık. Her diyarın boss'larını yen; kara sis bir sonrakinin üstünden kalkar.</p>
+
+      <ol class="path">
+        <li class="stage fog-card chunk">
+          <figure class="stage-img"><img src="img/stage1.webp" width="640" height="320" loading="lazy" alt="Kuzey Köyü'nün taş meydanı" data-i18n-alt="s1.alt"></figure>
+          <div class="stage-body">
+            <p class="danger"><span data-i18n="danger">Tehlike</span> I</p>
+            <h3 data-i18n="s1.name">Kuzey Ovaları</h3>
+            <dl>
+              <dt data-i18n="regions">Bölgeler</dt><dd data-i18n="s1.regions">Kuzey Köyü, Karanlık Orman, Yeşil Çayırlar</dd>
+              <dt data-i18n="bosses">Boss'lar</dt><dd data-i18n="s1.bosses">Balçık Kral, Arı Kraliçesi, Göl Canavarı, Lanetli Lich</dd>
+            </dl>
+          </div>
+        </li>
+        <li class="stage fog-card chunk">
+          <figure class="stage-img"><img src="img/stage2.webp" width="640" height="320" loading="lazy" alt="Karla kaplı Buzul Tepeleri ve avcı kulübesi" data-i18n-alt="s2.alt"></figure>
+          <div class="stage-body">
+            <p class="danger"><span data-i18n="danger">Tehlike</span> II</p>
+            <h3 data-i18n="s2.name">Kuzey Sınırları</h3>
+            <dl>
+              <dt data-i18n="regions">Bölgeler</dt><dd data-i18n="s2.regions">Buzul Tepeleri, Sisli Bataklık, Kavurucu Çöl</dd>
+              <dt data-i18n="bosses">Boss'lar</dt><dd data-i18n="s2.bosses">Yeti Kralı, Firavun, Bataklık Hidrası, Buz Kraliçesi</dd>
+            </dl>
+          </div>
+        </li>
+        <li class="stage fog-card chunk">
+          <figure class="stage-img"><img src="img/stage3.webp" width="640" height="320" loading="lazy" alt="Sık ağaçlı Cangıl Köyü" data-i18n-alt="s3.alt"></figure>
+          <div class="stage-body">
+            <p class="danger"><span data-i18n="danger">Tehlike</span> III</p>
+            <h3 data-i18n="s3.name">Dağlar ve Cangıl</h3>
+            <dl>
+              <dt data-i18n="regions">Bölgeler</dt><dd data-i18n="s3.regions">Kayalık Dağlar, Cangıl</dd>
+              <dt data-i18n="bosses">Boss'lar</dt><dd data-i18n="s3.bosses">Örümcek Kraliçesi, Taş Titan, Jaguar Tanrısı</dd>
+            </dl>
+          </div>
+        </li>
+        <li class="stage fog-card chunk">
+          <figure class="stage-img"><img src="img/stage4.webp" width="640" height="320" loading="lazy" alt="Kiraz ağaçlarıyla çevrili Kiraz Tapınağı" data-i18n-alt="s4.alt"></figure>
+          <div class="stage-body">
+            <p class="danger"><span data-i18n="danger">Tehlike</span> IV</p>
+            <h3 data-i18n="s4.name">Doğu Diyarları</h3>
+            <dl>
+              <dt data-i18n="regions">Bölgeler</dt><dd data-i18n="s4.regions">Kiraz Korusu, Mantar Diyarı, Savan</dd>
+              <dt data-i18n="bosses">Boss'lar</dt><dd data-i18n="s4.bosses">Mantar Lordu, Dokuz Kuyruk</dd>
+            </dl>
+          </div>
+        </li>
+        <li class="stage fog-card chunk">
+          <figure class="stage-img"><img src="img/stage5.webp" width="640" height="320" loading="lazy" alt="Lav gölleri arasında Volkan Kalesi" data-i18n-alt="s5.alt"></figure>
+          <div class="stage-body">
+            <p class="danger"><span data-i18n="danger">Tehlike</span> V</p>
+            <h3 data-i18n="s5.name">Kül ve Mercan</h3>
+            <dl>
+              <dt data-i18n="regions">Bölgeler</dt><dd data-i18n="s5.regions">Kül Diyarı, Mercan Sahili</dd>
+              <dt data-i18n="bosses">Boss'lar</dt><dd data-i18n="s5.bosses">Deniz Kralı, Ateş Ejderi</dd>
+            </dl>
+          </div>
+        </li>
+        <li class="stage fog-card chunk">
+          <figure class="stage-img"><img src="img/stage6.webp" width="640" height="320" loading="lazy" alt="Sonbahar renkleriyle Altın Orman" data-i18n-alt="s6.alt"></figure>
+          <div class="stage-body">
+            <p class="danger"><span data-i18n="danger">Tehlike</span> VI</p>
+            <h3 data-i18n="s6.name">Güney Elaria</h3>
+            <dl>
+              <dt data-i18n="regions">Bölgeler</dt><dd data-i18n="s6.regions">Güney Boğazı, Lavanta Ovası, Altın Orman</dd>
+              <dt data-i18n="bosses">Boss'lar</dt><dd data-i18n="s6.bosses">Fırtına Ruhu, Balkabağı Kral, Kraken</dd>
+            </dl>
+          </div>
+        </li>
+        <li class="stage fog-card chunk">
+          <figure class="stage-img"><img src="img/stage7.webp" width="640" height="320" loading="lazy" alt="Kızıl Kanyon'daki Maden Kasabası" data-i18n-alt="s7.alt"></figure>
+          <div class="stage-body">
+            <p class="danger"><span data-i18n="danger">Tehlike</span> VII</p>
+            <h3 data-i18n="s7.name">Kanyon ve Tuzla</h3>
+            <dl>
+              <dt data-i18n="regions">Bölgeler</dt><dd data-i18n="s7.regions">Kızıl Kanyon, Ak Tuzla</dd>
+              <dt data-i18n="bosses">Boss'lar</dt><dd data-i18n="s7.bosses">Dev Kartal, Tuz Solucanı, Maden Golemi</dd>
+            </dl>
+          </div>
+        </li>
+        <li class="stage fog-card chunk">
+          <figure class="stage-img"><img src="img/stage8.webp" width="640" height="320" loading="lazy" alt="Mor kristallerle parlayan gece vadisi" data-i18n-alt="s8.alt"></figure>
+          <div class="stage-body">
+            <p class="danger"><span data-i18n="danger">Tehlike</span> VIII</p>
+            <h3 data-i18n="s8.name">Son Diyarlar</h3>
+            <dl>
+              <dt data-i18n="regions">Bölgeler</dt><dd data-i18n="s8.regions">Kristal Vadisi, Hiçlik Diyarı</dd>
+              <dt data-i18n="bosses">Boss'lar</dt><dd data-i18n="s8.bosses">Kristal Ejder, Hiçlik Ejderi ve Son Kapı'nın ardında bekleyen</dd>
+            </dl>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 4. Neler var -->
+  <section id="features" class="section features" aria-labelledby="feat-title">
+    <div class="wrap">
+      <p class="kicker chunk" data-i18n="feat.kicker">Elaria'da neler var</p>
+      <h2 id="feat-title" class="chunk" data-i18n="feat.title">Dövüş, keşif, üretim</h2>
+      <div class="cards">
+        <article class="card chunk">
+          <figure><img src="img/feat_combat.webp" width="640" height="360" loading="lazy" alt="Lavlı arenada Ateş Ejderi ile dövüş, üstte boss can çubuğu" data-i18n-alt="f1.alt"></figure>
+          <h3 data-i18n="f1.t">Gerçek zamanlı dövüş</h3>
+          <p data-i18n="f1.p">Vuruş bekleme süresi, atılma, kritik vuruşlar. Her boss'un kendi hamleleri var; canı azalınca kendini iyileştirir, sert vurarak şifasını bozarsın.</p>
+        </article>
+        <article class="card chunk">
+          <figure class="sprites"><img src="img/classes.webp" width="960" height="84" loading="lazy" alt="On beş sınıfın kıyafetleriyle karakterler yan yana" data-i18n-alt="f2.alt"></figure>
+          <h3 data-i18n="f2.t">12 ırk, 15 sınıf, 52 yetenek</h3>
+          <p data-i18n="f2.p">Her ırkın kendi yeteneği, her sınıfın kendi dövüş tarzı var. Yetenekler rütbe atladıkça yeni hileler kazanır.</p>
+        </article>
+        <article class="card chunk">
+          <figure><img src="img/feat_craft.webp" width="640" height="360" loading="lazy" alt="Üretim masası ve çanta ekranı" data-i18n-alt="f3.alt"></figure>
+          <h3 data-i18n="f3.t">Üret, inşa et, ek</h3>
+          <p data-i18n="f3.p">902 tarif, örste güçlendirme ve büyü, yere konan bloklar, fırın, sandık ve tarla.</p>
+        </article>
+        <article class="card chunk">
+          <figure><img src="img/feat_world.webp" width="640" height="360" loading="lazy" alt="Gece, fenerlerle aydınlanan köy meydanı" data-i18n-alt="f4.alt"></figure>
+          <h3 data-i18n="f4.t">Yaşayan bir dünya</h3>
+          <p data-i18n="f4.p">Dört mevsim, gece ve gündüz, fırtınalar. Kan Ayı'nda canavarlar azar, yıldız yağmurunda gök cömert olur.</p>
+        </article>
+        <article class="card chunk">
+          <figure><img src="img/feat_dungeon.webp" width="640" height="360" loading="lazy" alt="Meşalelerle aydınlanan karanlık bir mezar zindanı" data-i18n-alt="f5.alt"></figure>
+          <h3 data-i18n="f5.t">Zindanlar ve başka diyarlar</h3>
+          <p data-i18n="f5.p">Unutulmuş Mezar, Ayaz Kalesi, Eski Maden. Kapıları aç, geçitlerden başka diyarlara geç; her yarığın kendi tehlikesi var.</p>
+        </article>
+        <article class="card chunk">
+          <figure><img src="img/feat_pets.webp" width="640" height="360" loading="lazy" alt="Mercan Sahili'nde suya uzanan ahşap iskele" data-i18n-alt="f6.alt"></figure>
+          <h3 data-i18n="f6.t">Yol arkadaşları</h3>
+          <p data-i18n="f6.p">Atını eyerle, kurdunu evcilleştir, kayığınla göle açıl, oltanı at.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Rakamlar -->
+  <section class="section numbers" aria-labelledby="num-title">
+    <div class="wrap">
+      <h2 id="num-title" class="chunk" data-i18n="num.title">Rakamlarla Elaria</h2>
+      <ul class="stats chunk">
+        <li><b data-count="1224">1.224</b><span data-i18n="num.items">eşya</span></li>
+        <li><b data-count="902">902</b><span data-i18n="num.recipes">tarif</span></li>
+        <li><b data-count="219">219</b><span data-i18n="num.creatures">yaratık</span></li>
+        <li><b data-count="43">43</b><span data-i18n="num.bosses">boss</span></li>
+        <li><b data-count="63">63</b><span data-i18n="num.quests">görev</span></li>
+        <li><b data-count="11">11</b><span data-i18n="num.chapters">bölümlük hikâye</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6. Arkadaşınla -->
+  <section class="section coop" aria-labelledby="coop-title">
+    <div class="wrap coop-grid">
+      <figure class="frame chunk"><img src="img/coop.webp" width="640" height="360" loading="lazy" alt="Altın Fıçı meyhanesinin içi" data-i18n-alt="coop.alt"></figure>
+      <div>
+        <p class="kicker chunk" data-i18n="coop.kicker">İki kişilik</p>
+        <h2 id="coop-title" class="chunk" data-i18n="coop.title">Arkadaşını çağır</h2>
+        <p class="chunk" data-i18n="coop.p">Biri oyunu kurar, öteki aynı Wi-Fi'dan katılır. Aynı dünyayı paylaşırsınız: kesilen ağaç, açılan sandık, yenilen boss ikiniz için de geçerli. Canavarlar iki kişiye göre güçlenir.</p>
+        <p class="note chunk" data-i18n="coop.note">Yalnız indirilen sürümde.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Oyna / İndir -->
+  <section id="play" class="section play" aria-labelledby="play-title">
+    <div class="wrap">
+      <p class="kicker chunk" data-i18n="play.kicker">Yolculuk başlasın</p>
+      <h2 id="play-title" class="chunk" data-i18n="play.title">Elaria seni bekliyor</h2>
+      <div class="play-grid">
+        <div class="panel panel-main chunk">
+          <h3 data-i18n="hero.play">Tarayıcıda oyna</h3>
+          <ul class="specs">
+            <li data-i18n="play.web.1">Kurulum yok: bu siteden açılır</li>
+            <li data-i18n="play.web.2">İlk açılışta yaklaşık 20 MB iner</li>
+            <li data-i18n="play.web.3">Kayıtların bu tarayıcıda saklanır</li>
+            <li data-i18n="play.web.4">Bilgisayarda, klavye ve fareyle</li>
+          </ul>
+          <a class="btn btn-gold btn-big" href="play/">
+            <span data-i18n="play.web.go">Oyna</span>
+            <small data-i18n="play.web.note">Chrome · Edge · Firefox</small>
+          </a>
+        </div>
+        <div class="panel chunk">
+          <h3 data-i18n="play.dl.t">Windows için indir</h3>
+          <ul class="specs">
+            <li data-i18n="play.dl.os">Windows 10 / 11, 64 bit</li>
+            <li data-i18n="play.dl.one">Kurulum yok: tek dosya, çift tıkla</li>
+            <li data-i18n="play.dl.size">Yaklaşık 95 MB</li>
+          </ul>
+          <a class="btn btn-ghost js-download dl" href="#play">
+            <span data-i18n="hero.download">İndir</span>
+            <small>Windows · 95 MB</small>
+          </a>
+          <p class="toast" role="status" aria-live="polite" hidden data-i18n="play.dl.later">İndirme bağlantısı site yayınlanınca eklenecek.</p>
+        </div>
+        <div class="panel chunk">
+          <h3 data-i18n="play.warn.t">Windows uyarı verirse</h3>
+          <ol class="steps">
+            <li data-i18n="play.warn.1">"Windows bilgisayarınızı korudu" penceresinde Ek bilgi'ye tıkla.</li>
+            <li data-i18n="play.warn.2">Yine de çalıştır'a bas.</li>
+            <li data-i18n="play.warn.3">Oyun açılır. Kayıtların %APPDATA%\PixelRPG klasöründe durur.</li>
+          </ol>
+          <p class="note" data-i18n="play.warn.why">Oyun henüz dijital imzalı değil, bu yüzden bu uyarı herkese çıkar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <p data-i18n="foot.by">Bir Ymir's Studio oyunu · Emir Destan Bakar</p>
+  <p class="note">© 2026</p>
+</footer>
+
+<canvas id="chunks" aria-hidden="true"></canvas>
+<canvas id="corner-fog" aria-hidden="true"></canvas>
+<script src="js/config.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/hero.js"></script>
+<script src="js/chunks.js"></script>
+<script src="js/blocks.js"></script>
+<script src="js/fog.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+# Render: Elaria lobisi (tarayıcıda iki kişilik oyun). Site GitHub Pages'te (bu deponun kökü), lobi burada (lobby/).
+# Ücretsiz plan: 15 dakika boşta kalınca uyur, ilk bağlantıda yaklaşık bir dakikada uyanır.
+services:
+  - type: web
+    name: elaria-lobi
+    runtime: node
+    plan: free
+    rootDir: lobby
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    autoDeploy: true

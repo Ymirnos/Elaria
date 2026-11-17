@@ -1,0 +1,9 @@
+{
+  "name": "elaria-lobi",
+  "private": true,
+  "type": "module",
+  "description": "Elaria lobisi (Render). Yayın deposunda lobby/ klasörüne kopyalanır: lobby/package.json, lobby/node/server.js, lobby/src/lobby.js",
+  "engines": { "node": ">=20" },
+  "scripts": { "start": "node node/server.js" },
+  "dependencies": { "ws": "^8.22.1" }
+}
